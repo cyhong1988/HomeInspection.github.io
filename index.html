@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>房屋複驗助手 (11F & 12F)</title>
+    <title>房屋複驗助手 (11F & 12F) Final</title>
     <style>
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
             --success-color: #27ae60;
             --danger-color: #e74c3c;
+            --warning-color: #f39c12;
             --bg-color: #f0f3f5;
         }
         body { font-family: -apple-system, "Noto Sans TC", sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px; padding-bottom: 120px; }
@@ -24,30 +25,30 @@
         /* 區塊樣式 */
         .section { background: white; border-radius: 10px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #ddd; }
         .section-header { background: var(--primary-color); color: white; padding: 12px 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .section-header span { font-size: 0.8rem; opacity: 0.8; }
         
         .item-list { padding: 5px 10px; }
         .item { border-bottom: 1px solid #f0f0f0; padding: 15px 0; display: flex; align-items: flex-start; }
         .item:last-child { border-bottom: none; }
         
-        input[type="checkbox"] { width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+        input[type="checkbox"] { width: 26px; height: 26px; margin-right: 12px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
         
         .content { flex: 1; }
-        .title { font-weight: 700; font-size: 1.05rem; color: #2c3e50; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
-        .desc { font-size: 0.9rem; color: #555; line-height: 1.5; margin-bottom: 6px; }
+        .title { font-weight: 700; font-size: 1.05rem; color: #2c3e50; margin-bottom: 5px; display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+        .desc { font-size: 0.9rem; color: #444; line-height: 1.5; margin-bottom: 6px; }
         
         /* 檢查方式小卡 */
-        .check-method { font-size: 0.85rem; color: #7e4a35; background: #fff9f0; padding: 8px 10px; border-radius: 6px; border-left: 4px solid #f39c12; }
+        .check-method { font-size: 0.85rem; color: #7e4a35; background: #fff9f0; padding: 8px 10px; border-radius: 6px; border-left: 4px solid var(--warning-color); }
         
         /* 標籤 */
         .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; color: white; font-weight: normal; }
         .bg-blue { background: #3498db; }
         .bg-green { background: #27ae60; }
         .bg-red { background: #e74c3c; }
+        .bg-orange { background: #e67e22; }
 
         /* 控制按鈕 */
         .controls { position: fixed; bottom: 0; left: 0; right: 0; padding: 15px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); border-top: 1px solid #ddd; display: flex; gap: 10px; }
-        button { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: opacity 0.2s; }
+        button { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
         .btn-reset { background: #95a5a6; color: white; }
         .btn-top { background: var(--accent-color); color: white; }
     </style>
@@ -55,165 +56,244 @@
 <body>
 
     <h1>房屋複驗追蹤系統</h1>
-    <div class="floor-tag">11樓 & 12樓 整合清單</div>
+    <div class="floor-tag">11樓 & 12樓 完整修正版</div>
 
     <div class="progress-container">
         <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold;">
-            <span>總完成進度</span>
+            <span>複驗總進度</span>
             <span id="progress-text">0 / 0</span>
         </div>
         <div class="progress-bar"><div id="progress-fill"></div></div>
     </div>
 
-    <h2 style="padding-left: 5px; color: #c0392b; border-left: 5px solid #c0392b; margin: 20px 0 10px;">11 樓 複驗項目</h2>
+    <h2 style="padding-left: 5px; color: #c0392b; border-left: 5px solid #c0392b; margin: 20px 0 10px;">11 樓 複驗清單</h2>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('s11-1')">11F: 客廳、走道、房間 <span>點擊展開/收合</span></div>
+        <div class="section-header" onclick="toggleSection('s11-1')">11F: 電箱、客廳與走道 <span>展開/收合</span></div>
         <div class="item-list" id="s11-1">
+            <div class="item">
+                <input type="checkbox" id="f11-e1">
+                <div class="content">
+                    <div class="title">電箱內部標示錯誤</div>
+                    <div class="desc">確認電箱開關對應之區域標示是否已更正。</div>
+                </div>
+            </div>
             <div class="item">
                 <input type="checkbox" id="f11-c1">
                 <div class="content">
-                    <div class="title">插座漏電 <span class="badge bg-blue">藍色膠帶</span></div>
-                    <div class="desc">全室貼有藍色膠帶處（包含影片開頭三處）。</div>
-                    <div class="check-method">確認是否無漏電。</div>
+                    <div class="title">插座漏電檢測 <span class="badge bg-red">重要</span></div>
+                    <div class="desc">影片開頭提到的三處插座。</div>
+                    <div class="check-method">請建商現場使用相位檢測器重新測試。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-c2">
                 <div class="content">
-                    <div class="title">插座周邊收邊 <span class="badge bg-green">綠色膠帶</span></div>
-                    <div class="desc">插座旁牆面批土或矽利康收邊。</div>
-                    <div class="check-method">觸摸接縫處，確認已填補平整，無縫隙或粗糙感。</div>
+                    <div class="title">牆面油漆修補 <span class="badge bg-blue">藍色膠帶</span></div>
+                    <div class="desc">全室藍色膠帶處油漆瑕疵。</div>
+                    <div class="check-method">確認粉刷平整，無光澤不均或刷痕。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-c3">
                 <div class="content">
-                    <div class="title">靠近落地窗的插座方向錯誤</div>
-                    <div class="desc">插座安裝方向與全室不一致。</div>
-                    <div class="check-method">確認插座已轉正（接地孔方向統一）。</div>
+                    <div class="title">插座收邊 <span class="badge bg-green">綠色膠帶</span></div>
+                    <div class="desc">插座旁牆面批土或矽利康未做好。</div>
+                    <div class="check-method">確認填補平整，無明顯縫隙。</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('s11-2')">11F: 廚房區域 (重點) <span>點擊展開/收合</span></div>
+        <div class="section-header" onclick="toggleSection('s11-2')">11F: 廚房區域 (重點項目) <span>展開/收合</span></div>
         <div class="item-list" id="s11-2">
             <div class="item">
                 <input type="checkbox" id="f11-k1">
                 <div class="content">
-                    <div class="title">抽油煙機風管「迴風」 <span class="badge bg-red">重要</span></div>
-                    <div class="desc">1. 管邊與牆接縫 2. 插座孔位。</div>
-                    <div class="check-method"><strong>必做：</strong>請建商開蓋，手伸入風管接縫與插座孔，確認無風倒灌吹出。</div>
+                    <div class="title">抽油煙機「迴風」灌入 <span class="badge bg-red">核心重點</span></div>
+                    <div class="desc">1. 管邊與牆接縫 2. 抽油煙機後方插座孔。</div>
+                    <div class="check-method"><strong>必做：</strong>請建商打開修飾蓋板，手伸進接縫與插座孔附近感受，標準為「完全無風感」。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-k2">
                 <div class="content">
-                    <div class="title">瓦斯爐吊櫃內部破損</div>
-                    <div class="desc">瓦斯爐上方吊櫃右側內部板材裂痕。</div>
-                    <div class="check-method">打開櫃門檢查右側壁面是否更換或修補平整。</div>
+                    <div class="title">系統櫃內部破損</div>
+                    <div class="desc">瓦斯爐上方吊櫃右側板材裂痕。</div>
+                    <div class="check-method">確認右側內壁已修復且無裂痕。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-k3">
                 <div class="content">
                     <div class="title">檯面殘膠與爐台刮痕</div>
-                    <div class="desc">流理檯面黏膩感與瓦斯爐表面刮痕。</div>
-                    <div class="check-method">摸摸看檯面是否清潔；光線下檢查爐台美容效果。</div>
+                    <div class="desc">檯面標示處殘膠；瓦斯爐表面刮損。</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('s11-3')">11F: 露台與浴室 <span>點擊展開/收合</span></div>
+        <div class="section-header" onclick="toggleSection('s11-3')">11F: 露台、浴室與其他 <span>展開/收合</span></div>
         <div class="item-list" id="s11-3">
             <div class="item">
                 <input type="checkbox" id="f11-b1">
                 <div class="content">
-                    <div class="title">露台地磚洩水坡度 <span class="badge bg-green">綠色膠帶</span></div>
-                    <div class="desc">L 型區域洩水不良、易積水。</div>
-                    <div class="check-method"><strong>必做：</strong>現場潑水測試，觀察水是否流向排水孔且無積水。</div>
+                    <div class="title">露台洩水坡度 <span class="badge bg-green">綠色膠帶 L型</span></div>
+                    <div class="desc">綠色膠帶標記區域洩水不良積水。</div>
+                    <div class="check-method">請建商現場潑水，確認水能流向落水頭且不殘留。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-b2">
                 <div class="content">
-                    <div class="title">女兒牆石材與二丁掛</div>
-                    <div class="desc">1. 二丁掛歪斜 2. 石材邊緣銳利 3. 石材填縫（藍色膠帶）。</div>
-                    <div class="check-method">確認二丁掛水平；觸摸石材邊緣是否有做「倒角」不刮手。</div>
+                    <div class="title">露台二丁掛與石材</div>
+                    <div class="desc">二丁掛歪斜、石材邊緣銳利(刮手)、石材接縫縫隙。</div>
+                    <div class="check-method">確認石材已做倒角(圓潤觸感)且接縫已美容。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f11-b3">
                 <div class="content">
-                    <div class="title">浴室石材與地磚</div>
-                    <div class="desc">馬桶後方石材裂紋觸感、地磚填縫、洗手台矽利康。</div>
-                    <div class="check-method">摸石材裂痕處是否平滑、洗手台靠牆處是否已打矽利康。</div>
+                    <div class="title">浴室細項</div>
+                    <div class="desc">門框刮損、馬桶後石材裂紋觸感、地磚填縫、洗手台矽利康。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f11-b4">
+                <div class="content">
+                    <div class="title">落地窗旁插座方向錯誤</div>
+                    <div class="desc">插座安裝方向與全室不符。</div>
+                    <div class="check-method">確認插座方向已旋轉至與全室統一。</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <h2 style="padding-left: 5px; color: #2980b9; border-left: 5px solid #2980b9; margin: 30px 0 10px;">12 樓 複驗項目</h2>
+    <h2 style="padding-left: 5px; color: #2980b9; border-left: 5px solid #2980b9; margin: 30px 0 10px;">12 樓 複驗清單</h2>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('s12-1')">12F: 弱電、照明與電箱 <span>點擊展開/收合</span></div>
+        <div class="section-header" onclick="toggleSection('s12-1')">12F: 客變位置與弱電電箱 <span>展開/收合</span></div>
         <div class="item-list" id="s12-1">
             <div class="item">
                 <input type="checkbox" id="f12-e1">
                 <div class="content">
-                    <div class="title">弱電 TC 盒與燈具出線位置</div>
-                    <div class="desc">牆面高處 TC 盒與天花板燈具管線位置錯誤。</div>
-                    <div class="check-method"><strong>對照客變圖：</strong>確認是否已移至正確高度與水平位置。</div>
+                    <div class="title">冷排安裝高度 <span class="badge bg-orange">客變核對</span></div>
+                    <div class="desc">樓梯上來處、主臥。</div>
+                    <div class="check-method"><strong>重點：</strong>確認冷排位置是否在「樑下 10 公分」。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f12-e2">
                 <div class="content">
-                    <div class="title">電箱內部瑕疵 <span class="badge bg-red">安全關鍵</span></div>
-                    <div class="desc">1. 線皮壓到（絕緣皮入鎖點） 2. 缺保護蓋。</div>
-                    <div class="check-method">請建商打開電箱：確認螺絲鎖在銅線上而非線皮，並補上護蓋。</div>
+                    <div class="title">TC 盒與天花板出線</div>
+                    <div class="desc">弱電整合盒、天花板燈具管線與圖面不符。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-e3">
+                <div class="content">
+                    <div class="title">主臥更衣室出線位置</div>
+                    <div class="desc">上方出線位置錯誤。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-e4">
+                <div class="content">
+                    <div class="title">電箱內部 <span class="badge bg-red">安全性</span></div>
+                    <div class="desc">1. 斷路器螺絲壓到線皮 2. 缺保護蓋。</div>
+                    <div class="check-method">確認螺絲鎖在銅線上。</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="section">
-        <div class="section-header" onclick="toggleSection('s12-2')">12F: 客廳、門窗與浴室 <span>點擊展開/收合</span></div>
+        <div class="section-header" onclick="toggleSection('s12-2')">12F: 客廳與門窗區域 <span>展開/收合</span></div>
         <div class="item-list" id="s12-2">
             <div class="item">
                 <input type="checkbox" id="f12-w1">
                 <div class="content">
-                    <div class="title">客廳弱電面板與漆面</div>
-                    <div class="desc">面板裝歪/鬆動、面板周邊漆面瑕疵。</div>
-                    <div class="check-method">確認面板水平牢固，周邊漆面已重新批土刷勻。</div>
+                    <div class="title">弱電面板安裝 <span class="badge bg-blue">藍色膠帶</span></div>
+                    <div class="desc">面板裝歪、底座鬆動、周邊漆面瑕疵。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f12-w2">
                 <div class="content">
-                    <div class="title">門窗刮損與把手</div>
-                    <div class="desc">窗框金屬邊緣刮痕/掉漆、落地窗把手鬆動。</div>
-                    <div class="check-method">反覆開關把手測試穩固度，觀察刮痕美容修補。</div>
-                </div>
-            </div>
-            <div class="item">
-                <input type="checkbox" id="f12-b1">
-                <div class="content">
-                    <div class="title">浴室洗手台 S 管滲水</div>
-                    <div class="desc">洗手台臉盆下方排水管接頭處。</div>
-                    <div class="check-method"><strong>必做：</strong>蓄滿水後一次放掉，用乾面紙包住接頭確認無水滴。</div>
+                    <div class="title">窗框與把手瑕疵</div>
+                    <div class="desc">金屬刮痕掉漆、落地窗把手鬆動。</div>
                 </div>
             </div>
             <div class="item">
                 <input type="checkbox" id="f12-w3">
                 <div class="content">
-                    <div class="title">全室門窗玻璃清潔</div>
-                    <div class="desc">全樓層門窗髒污與刮損。</div>
-                    <div class="check-method">檢查玻璃、窗框是否清潔，刮痕已完成美容修復。</div>
+                    <div class="title">落地窗框凹損 <span class="badge bg-blue">藍色膠帶 打X</span></div>
+                    <div class="desc">窗框上有打 X 的標示處。</div>
+                    <div class="check-method">確認金屬凹損已修補美容。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('s12-3')">12F: 浴室區域細項 <span>展開/收合</span></div>
+        <div class="item-list" id="s12-3">
+            <div class="item">
+                <input type="checkbox" id="f12-b1">
+                <div class="content">
+                    <div class="title">客衛浴磁磚破損 <span class="badge bg-orange">V字型膠帶</span></div>
+                    <div class="desc">確認破損磁磚已更換。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-b2">
+                <div class="content">
+                    <div class="title">客衛浴浴缸收邊</div>
+                    <div class="desc">浴缸矽利康尚未施作。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-b3">
+                <div class="content">
+                    <div class="title">主衛浴瑕疵</div>
+                    <div class="desc">1. 髒汙刮損(藍色膠帶) 2. 淋浴區右下矽利康漏打 3. 地排泥沙清除。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-b4">
+                <div class="content">
+                    <div class="title">洗手台 S 管滲水檢測</div>
+                    <div class="check-method"><strong>必做：</strong>面紙測試確認接頭無滲漏。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-header" onclick="toggleSection('s12-4')">12F: 露台與全室巡視 <span>展開/收合</span></div>
+        <div class="item-list" id="s12-4">
+            <div class="item">
+                <input type="checkbox" id="f12-ter1">
+                <div class="content">
+                    <div class="title">露台磁磚/地磚空心 <span class="badge bg-blue">藍色膠帶 打X</span></div>
+                    <div class="desc">二丁掛牆面與地板打 X 處。</div>
+                    <div class="check-method">敲擊確認已無空心聲。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-ter2">
+                <div class="content">
+                    <div class="title">露台玻璃與石材</div>
+                    <div class="desc">1. 最左側缺磚 2. 石材破損(V字膠帶) 3. 欄杆刮痕(綠色膠帶)。</div>
+                </div>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="f12-last">
+                <div class="content">
+                    <div class="title">全室小膠帶巡視</div>
+                    <div class="desc">巡視全室藍色或黃色小膠帶，確認處理完畢後撕除。</div>
                 </div>
             </div>
         </div>
@@ -267,4 +347,3 @@
     </script>
 </body>
 </html>
-
